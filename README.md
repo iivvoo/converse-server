@@ -33,4 +33,27 @@ separately for now
 
 ## Starting converse
 
-It's best to test against a local irc daemon first
+It's best to test against a local irc daemon first. Converse needs
+a config file (config.json) that looks as follows:
+
+    [
+        {
+            "username": "demo",
+            "backends": [
+                {
+                    "type": "irc",
+                    "name": "converse@localirc",
+                    "options": {
+                        "channels": [
+                            "#converse"
+                        ],
+                        "nick": "Converser",
+                        "host": "localhost",
+                        "port": 6667,
+                        "ssl": false
+                    }
+                }
+            ],
+            "password": "demo"
+        }
+    ]

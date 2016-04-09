@@ -57,3 +57,7 @@ a config file (config.json) that looks as follows:
             "password": "demo"
         }
     ]
+
+The frontend is a separate project. Its repo is at
+
+https://github.com/iivvoo/converse-client

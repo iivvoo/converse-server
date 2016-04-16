@@ -59,7 +59,6 @@ class AvatarFactory:
     def font(self):
         """Return a PIL ImageFont instance.
         """
-        import pdb; pdb.set_trace()
         path = os.path.join(os.path.dirname(__file__), 'font',
                             'FantasqueSansMono-BoldItalic.ttf')
         size = int(self.square_size * 0.8)

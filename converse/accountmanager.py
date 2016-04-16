@@ -25,8 +25,12 @@ class AccountManager:
 
     def init(self, file):
         self.file = file
-        with open(file, "r") as f:
-            self.config = json.loads(f.read())
+
+        try:
+            with open(file, "r") as f:
+                self.config = json.loads(f.read())
+        except FileNotFoundError:
+            return False
 
         for a in self.config:
             self.accounts.append(Account(
@@ -36,6 +40,7 @@ class AccountManager:
                     create_backend(b['type'], b['name'], b['options'])
                     for b in a['backends']])
             )
+        return True
 
     def save(self):
         self.config = []

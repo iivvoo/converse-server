@@ -78,9 +78,10 @@ async def server(websocket, path):  # noqa
                 account = a
                 await a.connect(websocket)
                 print("Auth {0} success".format(username))
+                await websocket.send("CONVERSE AUTH 1001 :Welcome\n")
                 break
         else:
-            await websocket.send("Invalid credentials\n")
+            await websocket.send("CONVERSE AUTH 1002 :Invalid credentials\n")
 
     done, pending = await asyncio.wait([websocket.connection_closed],
                                        return_when=asyncio.FIRST_COMPLETED)

@@ -209,6 +209,9 @@ class IRCBackend(Backend):
                 return u
         return None
 
+    def is_channel(self, name):
+        return name and name[0] in '#&'
+
     def get_create_channel(self, name):
         c = self.channels.get(name.lower())
 
@@ -221,16 +224,29 @@ class IRCBackend(Backend):
         print("PRIVMSG", nick, target, message)
 
         user = self.get_create_user(nick)
-        channel = self.get_create_channel(target)  # can also be user!
+        if self.is_channel(target):
+            channel = self.get_create_channel(target)  # can also be user!
 
-        channel._dump_users()
-        print(str(user))
-        await self.enqueue(Event.CHANNEL_MESSAGE,
-                           message=ChannelMessage(
-                               message=message,
-                               target=channel,
-                               user=user
-                           ))
+            channel._dump_users()
+            print(str(user))
+            # add message to channel for backlog
+            await self.enqueue(Event.CHANNEL_MESSAGE,
+                               message=ChannelMessage(
+                                   message=message,
+                                   target=channel,
+                                   user=user
+                               ))
+        else:  # XXX Must be me right?
+            if user.query():
+                await self.enqueue(Event.STARTQUERY, user=user)
+
+            # add message to user for backlog
+            await self.enqueue(Event.QUERY_MESSAGE,
+                               message=UserMessage(
+                                   message=message,
+                                   user=user
+                               ))
+
     # client commands
 
     def find_channel_by_id(self, channelid):

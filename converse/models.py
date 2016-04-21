@@ -18,6 +18,8 @@ class Event:
     USERJOIN = 12
     USERPART = 13
     NICKCHANGE = 14
+    STARTQUERY = 15
+    QUERY_MESSAGE = 16
 
     def __init__(self, type, backend, **details):
         self.type = type
@@ -86,9 +88,18 @@ class User(Identified):
     def __init__(self, name):
         super().__init__()
         self.name = name
+        self._query = False
         self.avatar = None
         # avatar, id,
         # irc: username, host
+
+    def query(self):
+        """ set user in query mode, return True of query
+            starts """
+        if not self._query:
+            self._query = True
+            return True
+        return False
 
     def get_avatar(self):
         if self.avatar is None:
@@ -119,9 +130,8 @@ class Message(Identified):
 class UserMessage(Message):
     """ message directed at a user """
 
-    def __init__(self, user, target, message):
+    def __init__(self, user, message):
         super().__init__(user, message)
-        self.target = target
 
 
 class ChannelMessage(Message):

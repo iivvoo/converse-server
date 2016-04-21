@@ -190,6 +190,21 @@ class Account(Identified):
                              "nickname": user.name,
                              "isme": event.isme,
                              "when": when})
+        elif event.type == Event.STARTQUERY:
+            user = event.user
+            messages.append({"type": "STARTQUERY",
+                             "user": {"id": user.id,
+                                      "name": user.name,
+                                      "avatar": self.avatar_url(event.backend.id, user)},
+                             "groupid": event.backend.id,
+                             "when": when})
+        elif event.type == Event.QUERY_MESSAGE:
+            msg = event.message
+            messages.append({"type": "QUERY_MESSAGE",
+                             "userid": msg.user.id,
+                             "groupid": event.backend.id,
+                             "message": msg.message,
+                             "when": msg.timestamp.isoformat() + 'Z'})
         for message in messages:
             up = json.dumps(message)
             print("Sending {0}".format(up))
